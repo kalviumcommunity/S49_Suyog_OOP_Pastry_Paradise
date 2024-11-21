@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <vector>
+
 class Ingredient
 {
 private:
@@ -15,7 +17,6 @@ public:
     {
         return quantity;
     }
-
     void setName(const std::string &name)
     {
         this->name = name;
@@ -25,7 +26,6 @@ public:
         this->quantity = quantity;
     }
 };
-
 class BakedGood
 {
 private:
@@ -36,10 +36,14 @@ public:
     {
         return name;
     }
-
-    void bake(const Ingredient &ingredient) const
+    void bake(const std::vector<Ingredient> &ingredients) const
     {
-        std::cout << "Baking " << this->name << " with " << ingredient.getQuantity() << "gms of " << ingredient.getName() << "..." << std::endl;
+        std::cout << "Baking " << this->name << " with:\n";
+        for (const auto &ingredient : ingredients)
+        {
+            std::cout << "- " << ingredient.getQuantity() << "gms of " << ingredient.getName() << "\n";
+        }
+        std::cout << "Done baking " << this->name << "!";
     }
 };
 
@@ -53,7 +57,6 @@ public:
     {
         return name;
     }
-
     void placeOrder(const BakedGood &bakedGood) const
     {
         std::cout << this->name << " ordered a " << bakedGood.getName() << std::endl;
@@ -62,10 +65,17 @@ public:
 
 int main()
 {
-    Ingredient flour("Flour", 500);
+    std::vector<Ingredient> ingredients = {
+        Ingredient("Flour", 500),
+        Ingredient("Sugar", 250),
+        Ingredient("Butter", 150)
+    };
+
     BakedGood bread("Bread");
     Customer customer("Priya");
+
     customer.placeOrder(bread);
-    bread.bake(flour);
+    bread.bake(ingredients);
+
     return 0;
 }
