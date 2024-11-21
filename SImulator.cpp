@@ -29,12 +29,24 @@ class BakedGood
 {
 private:
     std::string name;
+    static int totalBakedGoods;
+
 public:
-    BakedGood(const std::string &name) : name(name) {}
+    BakedGood(const std::string &name) : name(name)
+    {
+        totalBakedGoods++;
+    }
+
     std::string getName() const
     {
         return name;
     }
+
+    static int getTotalBakedGoods()
+    {
+        return totalBakedGoods;
+    }
+
     void bake(const std::vector<Ingredient> &ingredients) const
     {
         std::cout << "Baking " << this->name << " with:\n";
@@ -42,13 +54,18 @@ public:
         {
             std::cout << "- " << ingredient.getQuantity() << "gms of " << ingredient.getName() << "\n";
         }
-        std::cout << "Done baking " << this->name << "!";
+        std::cout << "Done baking " << this->name << "!\n";
     }
 };
+
+int BakedGood::totalBakedGoods = 0;
+
 class Customer
 {
 private:
     std::string name;
+    static int totalOrders;
+
 public:
     Customer(const std::string &name) : name(name) {}
     std::string getName() const
@@ -58,29 +75,52 @@ public:
     void placeOrder(const BakedGood &bakedGood) const
     {
         std::cout << this->name << " ordered a " << bakedGood.getName() << std::endl;
+        totalOrders++;
+    }
+
+    static int getTotalOrders()
+    {
+        return totalOrders;
     }
 };
 
+int Customer::totalOrders = 0;
+
 int main()
 {
-    std::vector<Ingredient *> ingredients = {
+    std::vector<Ingredient *> Bingredients = {
         new Ingredient("Flour", 500),
         new Ingredient("Sugar", 250),
         new Ingredient("Butter", 150)};
 
+    std::vector<Ingredient *> Pingredients = {
+        new Ingredient("Flour", 300),
+        new Ingredient("Eggs", 100),
+        new Ingredient("Chocolate", 150)};
 
     BakedGood *bread = new BakedGood("Bread");
+    BakedGood *pastry = new BakedGood("Pastry");
     Customer *customer = new Customer("Priya");
 
     customer->placeOrder(*bread);
-    bread->bake({*ingredients[0], *ingredients[1], *ingredients[2]});
+    customer->placeOrder(*pastry);
+    bread->bake({*Bingredients[0], *Bingredients[1], *Bingredients[2]});
+    pastry->bake({*Pingredients[0], *Pingredients[1], *Pingredients[2]});
+
+    std::cout << "Total baked goods created: " << BakedGood::getTotalBakedGoods() << std::endl;
+    std::cout << "Total orders placed: " << Customer::getTotalOrders() << std::endl;
 
     delete bread;
+    delete pastry;
     delete customer;
-    for (auto ingredient : ingredients)
+
+    for (auto ingredient : Bingredients)
     {
         delete ingredient;
     }
-
+    for (auto ingredient : Pingredients)
+    {
+        delete ingredient;
+    }
     return 0;
 }
