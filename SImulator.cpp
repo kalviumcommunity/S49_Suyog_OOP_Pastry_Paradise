@@ -8,7 +8,6 @@ private:
     int quantity;
 public:
     Ingredient(const std::string &name, int quantity) : name(name), quantity(quantity) {}
-
     // Accessors
     std::string getName() const
     {
@@ -18,7 +17,6 @@ public:
     {
         return quantity;
     }
-
     // Mutators
     void setName(const std::string &name)
     {
@@ -29,6 +27,8 @@ public:
         this->quantity = quantity;
     }
 };
+
+// The BakedGood class abstracts the details of a baked item.
 class BakedGood
 {
 private:
@@ -39,7 +39,6 @@ public:
     {
         totalBakedGoods++;
     }
-
     // Accessor
     std::string getName() const
     {
@@ -50,6 +49,8 @@ public:
     {
         return totalBakedGoods;
     }
+
+    // Public method to display the baking process, demonstrating abstraction by hiding internal details.
     void bake(const std::vector<Ingredient> &ingredients) const
     {
         std::cout << "Baking " << this->name << " with:\n";
@@ -60,7 +61,10 @@ public:
         std::cout << "Done baking " << this->name << "!\n";
     }
 };
+
 int BakedGood::totalBakedGoods = 0;
+
+// The Customer class abstracts the customer's interaction with baked goods.
 class Customer
 {
 private:
@@ -68,7 +72,6 @@ private:
     static int totalOrders;
 public:
     Customer(const std::string &name) : name(name) {}
-
     // Accessor
     std::string getName() const
     {
@@ -99,10 +102,14 @@ int main()
     BakedGood *bread = new BakedGood("Bread");
     BakedGood *pastry = new BakedGood("Pastry");
     Customer *customer = new Customer("Priya");
+
     customer->placeOrder(*bread);
     customer->placeOrder(*pastry);
+
+    // Baking goods, showing the use of abstraction as the details of the process are hidden.
     bread->bake({*Bingredients[0], *Bingredients[1], *Bingredients[2]});
     pastry->bake({*Pingredients[0], *Pingredients[1], *Pingredients[2]});
+
     std::cout << "Total baked goods created: " << BakedGood::getTotalBakedGoods() << std::endl;
     std::cout << "Total orders placed: " << Customer::getTotalOrders() << std::endl;
     delete bread;
