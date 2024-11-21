@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
 class Ingredient
 {
 private:
@@ -46,7 +45,6 @@ public:
         std::cout << "Done baking " << this->name << "!";
     }
 };
-
 class Customer
 {
 private:
@@ -65,17 +63,24 @@ public:
 
 int main()
 {
-    std::vector<Ingredient> ingredients = {
-        Ingredient("Flour", 500),
-        Ingredient("Sugar", 250),
-        Ingredient("Butter", 150)
-    };
+    std::vector<Ingredient *> ingredients = {
+        new Ingredient("Flour", 500),
+        new Ingredient("Sugar", 250),
+        new Ingredient("Butter", 150)};
 
-    BakedGood bread("Bread");
-    Customer customer("Priya");
 
-    customer.placeOrder(bread);
-    bread.bake(ingredients);
+    BakedGood *bread = new BakedGood("Bread");
+    Customer *customer = new Customer("Priya");
+
+    customer->placeOrder(*bread);
+    bread->bake({*ingredients[0], *ingredients[1], *ingredients[2]});
+
+    delete bread;
+    delete customer;
+    for (auto ingredient : ingredients)
+    {
+        delete ingredient;
+    }
 
     return 0;
 }
