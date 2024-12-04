@@ -4,6 +4,7 @@
 #include <memory> // For smart pointers
 
 // Ingredient class
+// SRP is Implemented
 class Ingredient {
 private:
     std::string name;
@@ -49,6 +50,7 @@ public:
 int BakedGood::totalBakedGoods = 0;
 
 // Derived class Pastry
+// LSP is Implemented
 class Pastry : public BakedGood {
 public:
     Pastry() : BakedGood("Pastry") {}
@@ -93,6 +95,7 @@ public:
 int Customer::totalOrders = 0;
 
 // Derived class BakedItemOrder demonstrating multiple inheritance
+// OCP is Implemented
 class BakedItemOrder : public Customer, public BakedGood {
 public:
     BakedItemOrder(const std::string &customerName, const std::string &bakedGoodName)
