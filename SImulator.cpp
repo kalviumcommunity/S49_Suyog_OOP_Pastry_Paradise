@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory> // For smart pointers
 
+// Ingredient class
 class Ingredient {
 private:
     std::string name;
@@ -14,7 +15,7 @@ public:
     int getQuantity() const { return quantity; }
 };
 
-// Base class BakedGood
+// Abstract base class BakedGood
 class BakedGood {
 private:
     std::string name;
@@ -22,13 +23,8 @@ private:
 
 public:
     // Constructor Overloading
-    //  Default constructor
     BakedGood() : name("Generic Baked Good") { ++totalBakedGoods; }
-
-    // Parameterized constructor
     BakedGood(const std::string &name) : name(name) { ++totalBakedGoods; }
-
-    // Destructor
     virtual ~BakedGood() {
         --totalBakedGoods;
         std::cout << "BakedGood [" << name << "] is being destroyed.\n";
@@ -37,6 +33,8 @@ public:
     std::string getName() const { return name; }
     static int getTotalBakedGoods() { return totalBakedGoods; }
 
+    // Virtual function (Pure virtual function to make this class abstract)
+    virtual void prepare() const = 0;  // Abstract method
     void bake(const std::vector<Ingredient> &ingredients) const
     {
         std::cout << "Baking " << name << " with:\n";
@@ -47,12 +45,19 @@ public:
         std::cout << "Done baking " << name << "!\n";
     }
 };
+
 int BakedGood::totalBakedGoods = 0;
 
-// Derived class Pastry using single inheritance
+// Derived class Pastry
 class Pastry : public BakedGood {
 public:
     Pastry() : BakedGood("Pastry") {}
+
+    // Overridden virtual function to provide specific implementation for Pastry
+    void prepare() const override {
+        std::cout << "Preparing Pastry with extra care!\n";
+    }
+
     void bake(const std::vector<Ingredient> &ingredients) const
     {
         std::cout << "Baking a special " << getName() << " with extra care!\n";
@@ -60,18 +65,16 @@ public:
     }
 };
 
+// Customer class
 class Customer {
 private:
     std::string name;
     static int totalOrders;
-public:
-    // Default constructor
-    Customer() : name("Anonymous") {}
 
-    // Parameterized constructor
+public:
+    Customer() : name("Anonymous") {}
     Customer(const std::string &name) : name(name) {}
 
-    // Destructor
     virtual ~Customer()
     {
         std::cout << "Customer [" << name << "] is being destroyed.\n";
@@ -83,13 +86,14 @@ public:
         std::cout << name << " ordered a " << bakedGood.getName() << "\n";
         ++totalOrders;
     }
+
     static int getTotalOrders() { return totalOrders; }
 };
+
 int Customer::totalOrders = 0;
 
 // Derived class BakedItemOrder demonstrating multiple inheritance
-class BakedItemOrder : public Customer, public BakedGood
-{
+class BakedItemOrder : public Customer, public BakedGood {
 public:
     BakedItemOrder(const std::string &customerName, const std::string &bakedGoodName)
         : Customer(customerName), BakedGood(bakedGoodName) {}
@@ -98,6 +102,12 @@ public:
     {
         placeOrder(*this); // Customer places an order for baked good
         bake(ingredients); // Bake the item
+        prepare(); // Prepare the baked item
+    }
+
+    // Overridden virtual function to provide specific implementation for BakedItemOrder
+    void prepare() const override {
+        std::cout << "Preparing BakedItemOrder with a special process!\n";
     }
 };
 
@@ -119,7 +129,6 @@ int main() {
     BakedItemOrder order1("Priya", "Bread");
     BakedItemOrder order2("Priya", "Pastry");
 
-
     order1.orderAndBake(Bingredients); // Using multiple inheritance
     order2.orderAndBake(Pingredients);
 
@@ -127,5 +136,3 @@ int main() {
     std::cout << "Total orders placed: " << Customer::getTotalOrders() << "\n";
     return 0;
 }
-
-
